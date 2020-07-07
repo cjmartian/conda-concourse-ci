@@ -939,12 +939,12 @@ def submit(pipeline_file, base_name, pipeline_name, src_dir, config_root_dir,
 
     # this is a plan director job.  Sync config.
     if not config_overrides:
-        subprocess.check_call(['ssh', '-o', 'UserKnownHostsFile=/dev/null',
+        subprocess.check_call(['ssh', '-n', '-o', 'UserKnownHostsFile=/dev/null',
                         '-o', 'StrictHostKeyChecking=no', '-i', key_file,
                         '{intermediate-user}@{intermediate-server}'.format(**data),
                         'mkdir -p {intermediate-base-folder}/{base-name}/config'.format(**data)])
         subprocess.check_call(['rsync', '--delete', '-av', '-e',
-                               'ssh -o UserKnownHostsFile=/dev/null '
+                               'ssh -n -o UserKnownHostsFile=/dev/null '
                                '-o StrictHostKeyChecking=no -i ' + key_file,
                                config_root_dir + '/',
                                ('{intermediate-user}@{intermediate-server}:'
@@ -952,12 +952,12 @@ def submit(pipeline_file, base_name, pipeline_name, src_dir, config_root_dir,
                                ])
     # this is a one-off job.  Sync the recipes we've computed locally.
     else:
-        subprocess.check_call(['ssh', '-o', 'UserKnownHostsFile=/dev/null',
+        subprocess.check_call(['ssh', '-n', '-o', 'UserKnownHostsFile=/dev/null',
                         '-o', 'StrictHostKeyChecking=no', '-i', key_file,
                         '{intermediate-user}@{intermediate-server}'.format(**data),
                         'mkdir -p {intermediate-base-folder}/{base-name}'.format(**data)])
         subprocess.check_call(['rsync', '--delete', '-av', '-e',
-                               'ssh -o UserKnownHostsFile=/dev/null '
+                               'ssh -n -o UserKnownHostsFile=/dev/null '
                                '-o StrictHostKeyChecking=no -i ' + key_file,
                                '-p', '--chmod=a=rwx',
                                src_dir + '/',
@@ -966,7 +966,7 @@ def submit(pipeline_file, base_name, pipeline_name, src_dir, config_root_dir,
                                 .format(**data))
                                ])
         # remove any existing artifacts for sanity's sake - artifacts are only from this build.
-        subprocess.check_call(['ssh', '-o', 'UserKnownHostsFile=/dev/null',
+        subprocess.check_call(['ssh', '-n', '-o', 'UserKnownHostsFile=/dev/null',
                         '-o', 'StrictHostKeyChecking=no', '-i', key_file,
                         '{intermediate-user}@{intermediate-server}'.format(**data),
                         'rm -rf {intermediate-base-folder}/{base-name}/artifacts'.format(**data)])
