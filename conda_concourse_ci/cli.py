@@ -116,8 +116,21 @@ def parse_args(parse_this=None):
         )
     )
     one_off_parser.add_argument(
+        "--pr-num",
+        action="store",
+        help="The PR number on which to make a comment when using the automated pipeline"
+    )
+    one_off_parser.add_argument(
+        "--repository",
+        action="store",
+        help="The git repo where the PR lives. This should look like: Org/Repo"
+    )
+    one_off_parser.add_argument(
         '--stage-for-upload', action='store_true',
         help="create job that stages package for upload as part of the pipeline")
+    one_off_parser.add_argument(
+        '--push-branch', action='store_true',
+        help="create a job that push the branch(es) used for the build to master")
     one_off_parser.add_argument(
         '--commit-msg', action='store',
         help=("git commit message to record when packages are uploaded, "
